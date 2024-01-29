@@ -6,6 +6,7 @@ const { StatusCodes } = require('http-status-codes')
 const PORT = process.env.PORT
 const connectDb = require('./db/connect')
 const expressFileUpload = require('express-fileupload')
+const path = require('path')
 
 // instance 
 const app = express()
@@ -16,6 +17,7 @@ app.use(express.json()) // json format of data
 
 // public dir as static
 app.use(express.static("public"))
+app.use(express.static("build"))
 
 // middleware
 app.use(cors()) // cross origin resource sharing
@@ -24,6 +26,14 @@ app.use(expressFileUpload({
     limits: { fileSize: 10 * 1024 * 1024},
     useTempFiles: true
 }))
+
+if(process.env.SERVER === "production") {
+    // executes in production mode
+    app.use(`/`, (req,res, next) => {
+        return res.sendFile(path.resolve(__dirname,`./build/index.html`))
+        next()
+    })
+}
 
 // api route
 app.use(`/api/auth`, require('./route/authRoute'))

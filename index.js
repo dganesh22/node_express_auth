@@ -27,6 +27,7 @@ app.use(expressFileUpload({
     useTempFiles: true
 }))
 
+// production controller
 if(process.env.SERVER === "production") {
     // executes in production mode
     app.use(`/`, (req,res, next) => {
@@ -41,9 +42,9 @@ app.use(`/api/file`, require('./route/fileRoute'))
 app.use(`/api/user`, require('./route/userRoute'))
 
 // default route
-app.use(`**`, (req,res) => {
-    res.status(StatusCodes.SERVICE_UNAVAILABLE).json({ msg: `Requested service path not available`, success: false })
-})
+// app.use(`**`, (req,res) => {
+//     res.status(StatusCodes.SERVICE_UNAVAILABLE).json({ msg: `Requested service path not available`, success: false })
+// })
 
 //server listen
 app.listen(PORT,() => {
